@@ -1,0 +1,56 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Books</h1>
+<br>
+<%= turbo_frame_tag "books", class: "shadow overflow-hidden rounded border-b border-gray-200" do %>
+  <%= form_with url: books_url, method: :get, data: { controller: "search-form", search_form_target: "form", turbo_frame: "filters" } do |form| %>
+    <%= form.collection_select :book_filter,
+                               Book::BOOK_FILTERS, :to_s, :to_s,
+                                :include_blank => 'Filters',
+                               :id => :book_filter
+    %>
+    <%= form.text_field :book_filter_value, placeholder: "Search here", value: params[:book_filter_value], class: "border border-blue-500 rounded p-2", :id => :book_filter_value %>
+    <%= form.button "Search", class: "bg-blue-500 text-white p-2 rounded-sm" %>
+  <% end %>
+
+  <br>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Author</th>
+      <th>Publisher</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Rating</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @books.each do |book| %>
+      <tr>
+        <td><%= book.name %></td>
+        <td><%= book.author %></td>
+        <td><%= book.publisher %></td>
+        <td><%= book.price %></td>
+        <td><%= book.stock %></td>
+        <td><%= @review.where("book_id=?",book.id).average(:rating) %></td>
+        <td><%= link_to 'Show', book %></td>
+<!--        <td><%#= link_to 'Buy', new_transaction_path(:book_id => book.id) %></td>-->
+        <td><%= link_to 'Add to Cart/Buy', new_cart_path(:book_id => book.id) %></td>
+        <td><%= link_to 'Edit', edit_book_path(book) %></td>
+        <td><%= button_to 'Destroy', book_path(book), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show Reviews', reviews_path(:book_id => book.id)%></td>
+        <td>
+          <%= link_to "Review this book", new_review_path(:book_id => book.id) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<br>
+
+<%= link_to 'New Book', new_book_path %>

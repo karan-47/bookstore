@@ -1,0 +1,35 @@
+<p id=”notice”><%= notice %></p>
+<h1>Welcome to BookStore</h1>
+
+<p id="alert"><%= alert %></p>
+
+<% if current_user %>
+  Logged in as <%= current_user.name %>.<br><br>
+<!--  ID: <%#= current_user.id %>-->
+  <%#= current_user %>
+  <%= link_to "View Books", books_path %> <br>
+  <%= link_to "View cart", carts_path(:user_id => current_user.id) %> <br>
+
+  <%= link_to "My Transactions", transactions_url %>
+
+  <br>
+  <%= link_to 'My Account', edit_user_path(current_user) %> <br>
+  <br>
+  <%# else %>
+  <%= link_to "My Reviews", reviews_path(:user_id => current_user.id) %>
+<%# end %>
+  
+  <%= link_to "Logout", logout_path %>
+
+  <br>
+  <% if current_user.email == "admin@gmail.com" %>
+    <%= link_to "All users", users_url %>
+    <%end %>
+<% else %>
+  <%= link_to "Signup", signup_path %>
+  <br>
+  <%= link_to "Login", login_path %>
+  <br>
+
+  
+<% end %>

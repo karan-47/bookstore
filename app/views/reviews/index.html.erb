@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Reviews</h1>
+
+<%= form_tag reviews_path, method: :get do %>
+  <%= label_tag :filter_by_book%>
+  <%= select_tag :book, options_for_select(Book.pluck(:name).uniq), include_blank: true %>
+  <%= submit_tag "Filter" %>
+<% end %>
+
+<%= form_tag reviews_path, method: :get do %>
+  <%= label_tag :filter_by_user%>
+  <%= select_tag :user, options_for_select(User.pluck(:username).uniq), include_blank: true %>
+  <%= submit_tag "Filter" %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rating</th>
+      <th>Review</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reviews.each do |review| %>
+      <tr>
+        <td><%= review.rating %></td>
+        <td><%= review.review %></td>
+        <% if current_user.id == review.user_id or current_user.email=="admin@gmail.com" %>
+        <td><%= link_to 'Show', review %></td>
+        <td><%= link_to 'Edit', edit_review_path(review) %></td>
+        <td><%= link_to 'Destroy', review, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
